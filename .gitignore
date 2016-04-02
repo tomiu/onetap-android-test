@@ -30,3 +30,9 @@ proguard/
 
 # Android Studio captures folder
 captures/
+
+# Remove any IDEA files leaving only the GRADLE script.
+*.iml
+/.idea
+.DS_Store
+/captures
