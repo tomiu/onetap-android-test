@@ -41,4 +41,9 @@ dependencies {
 
     compile 'fr.avianey.com.viewpagerindicator:library:2.4.1.1@aar'
 
+    compile "me.henrytao:smooth-app-bar-layout:" + version + '.1'
+    compile "me.henrytao:recyclerview:" + version
+    compile "me.henrytao:mdcore:" + version
+
+
 }
