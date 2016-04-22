@@ -11,7 +11,7 @@ public abstract class BaseViewFragment extends Fragment {
     int mTabNumber;
 
     /**
-     * Creates bundle and ads any arguments to the Fragment;
+     * Creates bundle and adds any arguments to the Fragment;
      * @param fragment
      * @param tabNumber
      */

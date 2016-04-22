@@ -11,6 +11,8 @@ import me.henrytao.recyclerview.holder.HeaderHolder;
 
 /**
  * Created by tomiurankar on 06/04/16.
+ *
+ * This class sets the HeaderView for the SimpleRecyclerViewAdapter, which is used by the SmoothAppBar
  */
 public class ListViewAdapterWrapper extends SimpleRecyclerViewAdapter {
 
@@ -26,10 +28,5 @@ public class ListViewAdapterWrapper extends SimpleRecyclerViewAdapter {
     @Override
     public RecyclerView.ViewHolder onCreateHeaderViewHolder(LayoutInflater inflater, ViewGroup parent) {
         return new HeaderHolder(inflater, parent, R.layout.item_listview_header_spacing);
-    }
-
-    @Override
-    public void setBaseAdapter(RecyclerView.Adapter baseAdapter, boolean notifyDataSetChanged) {
-        super.setBaseAdapter(baseAdapter, notifyDataSetChanged);
     }
 }

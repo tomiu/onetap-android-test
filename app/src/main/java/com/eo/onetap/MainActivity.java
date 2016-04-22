@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Define number of tabs
      */
-    private static final int TABS_COUNT = 3;
+    private static final int TABS_COUNT = 2;
     /**
      * Defines number of images
      */
@@ -26,11 +26,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Responsible for Header Image flinging above the tab bar
-        ViewPagerHelper.HeaderViewPager imagesViewPager = new ViewPagerHelper.HeaderViewPager(this, IMAGES_COUNT);
+        HeaderViewPager imagesViewPager = new HeaderViewPager(this, IMAGES_COUNT);
         imagesViewPager.init();
 
         // Responsible for content, such as tabbar and recycle view
-        ContentHelper contentHelper = new ContentHelper(this, TABS_COUNT);
-        contentHelper.init();
+        TabListView tabListView = new TabListView(this, TABS_COUNT);
+        tabListView.init();
+
     }
+
 }
