@@ -3,6 +3,7 @@ package com.eo.onetap;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.location.Location;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -38,6 +39,7 @@ public class TabListView implements TabLayout.OnTabSelectedListener, ItemClickSu
     private ProgressDialog mProgressDialog;
     private Snackbar mSnackBar;
     private WeatherApi mWeatherApi;
+    private Location mLocation;
 
     public TabListView(AppCompatActivity activity, int numOfTabs) {
         mContext = activity;
@@ -46,11 +48,17 @@ public class TabListView implements TabLayout.OnTabSelectedListener, ItemClickSu
         mTabLayout = (TabLayout) activity.findViewById(R.id.main_tablayout);
     }
 
-    public void init() {
+    public synchronized void init(Location location) {
+        // Currently only first location is registered. This can easily be expanded to allow for new weather updates if location has changed.
+        if (mAdapter != null)
+            return;
+
         mAdapter = new ListViewAdapter();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mRecyclerView.getContext()));
         mRecyclerView.setAdapter(new ListViewAdapterWrapper(mAdapter));
         ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(this);
+
+        mLocation = location;
 
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setTitle("Fetching weather ...");
@@ -95,11 +103,13 @@ public class TabListView implements TabLayout.OnTabSelectedListener, ItemClickSu
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
+        // we dismiss snackbar when clicking on tabs so we don't get a snackbar from a previous tab in the next tab
         if (mSnackBar != null)
             mSnackBar.dismiss();
 
-        mProgressDialog.show();
-        mWeatherApi.fetchWeather(tab.getPosition() == 0 ? 16 : 5);
+
+        int numberOfDays = tab.getPosition() == 0 ? 16 : 5;
+        startFetchingWeatherData(numberOfDays);
     }
 
     @Override
@@ -110,6 +120,11 @@ public class TabListView implements TabLayout.OnTabSelectedListener, ItemClickSu
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
 
+    }
+
+    private void startFetchingWeatherData(int numberOfDays) {
+        mProgressDialog.show();
+        mWeatherApi.fetchWeather(numberOfDays, mLocation);
     }
 
     @Override

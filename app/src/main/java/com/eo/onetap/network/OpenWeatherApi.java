@@ -43,21 +43,20 @@ class OpenWeatherApi implements WeatherApi, Response.Listener<JSONObject>, Respo
     }
 
     @Override
-    public synchronized void fetchWeather(int numberOfDays) {
+    public synchronized void fetchWeather(int numberOfDays, Location location) {
         if (!Network.isOnline(mContext)) {
             mCallback.weatherDataDownloaded(null, new Exception("No internet connection"));
             return;
         }
 
-        double[] location = getLocation();
         if (location == null) {
             mCallback.weatherDataDownloaded(null, new Exception("Could not get location"));
             return;
         }
 
         String url = "http://api.openweathermap.org/data/2.5/forecast/daily?" +
-                "lat=" + location[0] +
-                "&lon=" + location[1] +
+                "lat=" + location.getLatitude() +
+                "&lon=" + location.getLongitude() +
                 "&cnt=" + numberOfDays +
                 "&APPID=" + OPEN_WEATHER_API_ID;
 
@@ -66,30 +65,6 @@ class OpenWeatherApi implements WeatherApi, Response.Listener<JSONObject>, Respo
                 (Request.Method.GET, url, null, this, this);
 
         VolleyHelper.getInstance(mContext).addToRequestQueue(jsObjRequest);
-    }
-
-    private double[] getLocation() {
-        // Get the location manager
-        LocationManager locationManager = (LocationManager)
-                mContext.getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        String bestProvider = locationManager.getBestProvider(criteria, false);
-        Location location = locationManager.getLastKnownLocation(bestProvider);
-        double lat;
-        double lon;
-
-        if (location != null) {
-            lat = location.getLatitude();
-            lon = location.getLongitude();
-        } else {
-            // this condition NEVER should go into production. But this is a sample app soo ...
-            Toast.makeText(mContext, "Could not get location, probably running in Emulator. Defaulting to Ljubljana", Toast.LENGTH_SHORT).show();
-            lat = 46;
-            lon = 14;
-        }
-
-
-        return new double[]{lat, lon};
     }
 
     @Override
